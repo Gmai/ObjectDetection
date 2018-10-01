@@ -1,12 +1,13 @@
-version: "3"
+version: "2.3"
 services:
   notebook:
+    runtime: nvidia
     container_name: od_container
     labels:
       description: object_detection API Nvidia GPU Python 3 using Jupyter Notebooks
-      name: jupyter notebook 
+      name: jupyter_notebook 
     ports:
       - "8888:8888"
     volumes:
-      - ./Github:/usr/src/object_detection
+      - /home/shogun/Desktop/Projetos/Python/ObjectDetection/Github:/usr/src/object_detection
     build: . 
