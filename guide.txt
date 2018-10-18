@@ -1,0 +1,63 @@
+** build docker image
+docker build -t object_detection .
+docker build --rm -t object_detection .
+
+** run container in docker
+docker run -it -d object_detection --name od_container /bin/bash
+docker run -it -d --runtime=nvidia --name od_container object_detection /bin/bash
+docker run -it -d -p 8888:8888 --runtime=nvidia --name od_container object_detection /bin/bash 
+
+*** execute commands in docker
+docker exec -it <containerID>
+
+**** test tensorflow gpu instalation
+import tensorflow as tf
+sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
+
+
+**** The cp command can be used to copy files. One specific file can be copied like:
+docker cp foo.txt mycontainer:/foo.txt
+docker cp mycontainer:/foo.txt foo.txt
+**** For emphasis, mycontainer is a container ID, not an image ID.
+**** Multiple files contained by the folder src can be copied into the target folder using:
+docker cp src/. mycontainer:/target
+docker cp mycontainer:/src/. target
+
+
+RUN cd cocoapi/PythonAPI && make
+RUN cp -r pycocotools $HOME/models/research/
+
+docker exec -it 8b56a7177a9b cd /usr/src/object_detection/cocoapi/PythonAPI && make
+
+**** removing all the unused Images
+docker rmi -f $(docker image ls -a | grep '^<none>' | awk '{print $3}')
+**** removing all the unused containers
+docker rm -f $(docker container ls -a | grep -v '^CONTAINER' | awk '{print $1}')
+**** deletes all containers that have a status of exited
+docker rm $(docker ps -a -q -f status=exited)
+**** see the ports by running: docker port [CONTAINER]
+docker port static-site
+
+docker rm -f od_container
+docker build --rm -t object_detection .
+docker run -it -d -p 8080:8080 --runtime=nvidia --name od_container object_detection /bin/bash 
+
+docker run -it -d --runtime=nvidia 8771ea7414b2 /bin/bash
+
+docker exec -it e2a265b05d98 sh -c 'cd models/research && python3 models/research/object_detection/builders/model_builder_test.py'
+docker exec -it e2a265b05d98 sh -c 'cd models/research && python3 /usr/src/object_detection/models/research/object_detection/builders/model_builder_test.py'
+docker exec -it e2a265b05d98 sh -c 'cd models/research && export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim'
+
+docker exec -it e2a265b05d98 ls /usr/src/object_detection/models/research/object_detection/builders
+docker exec -it e2a265b05d98 echo $PYTHONPATH
+docker exec -it e2a265b05d98 printenv
+
+docker exec -it od_container sh -c 'cd models/research && jupyter notebook --ip=0.0.0.0 --port=8888 --allow-root'
+docker exec -it od_container sh -c 'cd models/research && python3 /usr/src/object_detection/models/research/object_detection/builders/model_builder_test.py'
+docker exec -it e2a265b05d98 
+
+docker-compose build 
+docker-compose up 
+docker-compose down
+
+python3 labelImg.py [IMAGE_PATH] [PRE-DEFINED CLASS FILE]

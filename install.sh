@@ -1,13 +1,15 @@
-#!/bin/sh
+#!/bin/bash
 
-cd ./Github
-git clone https://github.com/cocodataset/cocoapi.git
-git clone https://github.com/tensorflow/models.git
-sed -i 's/python /python3 /g' ./cocoapi/PythonAPI/Makefile
+if [ ! -d "Github" ]; then
+    mkdir Github
+fi
 
-cd ../protoc
-wget https://github.com/protocolbuffers/protobuf/releases/download/v3.0.0/protoc-3.0.0-linux-x86_64.zip
-unzip ./protoc-3.0.0-linux-x86_64.zip
-
-cd ..
-docker-compose build
+if [ ! -d "Github/labelImg" ]; then
+    cd Github
+    git clone https://github.com/tzutalin/labelImg.git
+    apt-get install pyqt5-dev-tools -y
+    cd labelImg
+    pip3 install -r requirements/requirements-linux-python3.txt
+    make qt5py3
+    cd ../..
+fi

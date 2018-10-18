@@ -9,5 +9,6 @@ services:
     ports:
       - "8888:8888"
     volumes:
-      - /home/shogun/Desktop/Projetos/Python/ObjectDetection/Github:/usr/src/object_detection
+      - /home/shogun/Desktop/Projetos/Python/ObjectDetection/workspace:/usr/src/object_detection/workspace
     build: . 
+    command: ["jupyter","notebook","--port=8888","--no-browser","--ip=0.0.0.0","--allow-root"]
