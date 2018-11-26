@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd ../Github/labelImg/
-python3 labelImg.py ../../workspace/images/ ../../workspace/predefined_classes.txt ../../workspace/xmls
+python labelImg.py ../../workspace/gym-images/ ../../workspace/predefined_classes.txt ../../workspace/gym-xmls
